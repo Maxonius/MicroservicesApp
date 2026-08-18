@@ -22,6 +22,7 @@ public class UserService implements IUserService{
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final UserEventPublisher eventPublisher;
 
     @Override
     public UserResponseDto createUser(UserRequestDto requestDto){
@@ -33,6 +34,8 @@ public class UserService implements IUserService{
 
         User user = userMapper.toEntity(requestDto);
         User saved = userRepository.save(user);
+
+        eventPublisher.publishUserCreated(saved.getId(), saved.getEmail());
 
         log.info("User created, id: {}", saved.getId());
         return userMapper.toResponseDto(saved);
@@ -80,9 +83,10 @@ public class UserService implements IUserService{
     public void deleteUser(Long id) {
         log.info("Deleting user with id {}", id);
 
-        if(!userRepository.existsById(id)){
-            throw new UserNotFoundException(id);
-        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        eventPublisher.publishUserDeleted(user.getId(), user.getEmail());
 
         userRepository.deleteById(id);
         log.info("User with id {} deleted", id);
