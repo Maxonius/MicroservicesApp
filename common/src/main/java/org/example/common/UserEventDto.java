@@ -1,11 +1,9 @@
-package com.example.user_service.dto;
+package org.example.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -14,6 +12,6 @@ import java.time.LocalDateTime;
 public class UserEventDto {
     private Long userId;
     private String email;
-    private String operation; // "CREATED" или "DELETED"
+    private String operation;
     private String timestamp;
 }

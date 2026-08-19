@@ -2,7 +2,7 @@ package org.example.notificationservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.notificationservice.dto.UserEvent;
+import org.example.common.UserEventDto;
 import org.example.notificationservice.sevice.EmailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,7 @@ public class NotificationController {
     private final EmailService emailService;
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendNotification(@RequestBody UserEvent event) {
+    public ResponseEntity<String> sendNotification(@RequestBody UserEventDto event) {
         log.info("Получен запрос на отправку уведомления {}", event);
 
         String subject;
@@ -26,10 +26,10 @@ public class NotificationController {
 
         if ("CREATED".equals(event.getOperation())) {
             subject = "Аккаунт создан";
-            text = "Здравствуйте! Ваш аккаунт на сайте был успешно создан.";
+            text = "Здравствуйте! Ваш аккаунт на сайте ваш сайт был успешно создан.";
         } else if ("DELETED".equals(event.getOperation())) {
             subject = "Аккаунт удален";
-            text = "Здравствуйте! Ваш аккаунт на сайте был успешно удален.";
+            text = "Здравствуйте! Ваш аккаунт был удалён.";
         } else {
             return ResponseEntity.badRequest().body("Неизвестная операция " + event.getOperation());
         }
